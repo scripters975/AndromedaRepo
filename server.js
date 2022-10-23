@@ -19,8 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 
-app.use('/Api',CategoriesRouter)
-app.use('/Api',QuotessRouter)
+app.use('/Api/QuotesCategoryApi',CategoriesRouter)
+app.use('/Api/QuotesApi',QuotessRouter)
 
 
 
