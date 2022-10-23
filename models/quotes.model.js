@@ -25,37 +25,41 @@ const QuotesSchema = new Schema({
 
 const models = []
 const collections = [
-        "deathQuotes",
-        "faithQuotes",
-        "godQuotes",
-        "happinessQuotes",
-        "hopeQuotes",
-        "humorQuotes",
-        "inspirationQuotes",
-        "knowledgeQuotes",
-        "life-lessonsQuotes",
-        "lifeQuotes",
-        "loveQuotes",
-        "motivationQuotes",
-        "motivationalQuotes",
-        "philosophyQuotes",
-        "poetryQuotes",
-        "relationshipsQuotes",
-        "religionQuotes",
-        "romanceQuotes",
-        "scienceQuotes",
-        "spiritualityQuotes",
-        "successQuotes",
-        "timeQuotes",
-        "truthQuotes",
-        "wisdomQuotes",
-        "writingQuotes"
+    "deathquotes",
+    "faithquotes",
+    "godquotes",
+    "happinessquotes",
+    "hopequotes",
+    "humorquotes",
+    "inspirationquotes",
+    "knowledgequotes",
+    "life-lessonsquotes",
+    "lifequotes",
+    "lovequotes",
+    "motivationquotes",
+    "motivationalquotes",
+    "philosophyquotes",
+    "poetryquotes",
+    "relationshipsquotes",
+    "religionquotes",
+    "romancequotes",
+    "sciencequotes",
+    "spiritualityquotes",
+    "successquotes",
+    "timequotes",
+    "truthquotes",
+    "wisdomquotes",
+    "writingquotes"
 ]
 
 collections.forEach(collection => {
     models.push({
-        name: mongoose.model(collection, QuotesSchema)
+        
+        collectionName: collection,
+        modelName: mongoose.model(collection, QuotesSchema)
+
     })
 })
 
+// const Quotes = mongoose.model("writingQuotes", QuotesSchema);
 module.exports = models;
