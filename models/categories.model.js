@@ -6,25 +6,25 @@ const CategoriesSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-        trim:true
+        trim: true
 	},
     id:{
-        type:Number,
-        required:true
+        type: Number,
+        required: true
     },
     tag:{
-        type:String,
-        required:true
+        type: String,
+        required: true
         
     },
     slug:{
-        type:String,
-        trim:true,
-        required:true
+        type: String,
+        trim: true,
+        required: true
     },
     metaTitle:{
-        type:String,
-        trim:true,
+        type: String,
+        trim: true,
         required:true
     },
     iconImageUrl:{

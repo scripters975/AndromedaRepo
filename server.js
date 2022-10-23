@@ -3,6 +3,7 @@ const express = require('express');
 const db = require('./config/dbConnection');
 const {defaultErrorHandler} = require('./middleware/common/errorHandler')
 const CategoriesRouter = require('./routes/categories.router')
+const QuotessRouter = require('./routes/quotes.router')
 const app = express();
 const { AppError } = require('./utils/appError.utils');
 const cors = require('cors')
@@ -18,7 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 
-app.use('/Api',CategoriesRouter)
+app.use('/Api/QuotesCategoryApi',CategoriesRouter)
+app.use('/Api/QuotesApi',QuotessRouter)
 
 
 
