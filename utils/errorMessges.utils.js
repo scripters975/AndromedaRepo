@@ -1,6 +1,7 @@
 
 MESSAGE = {
     USER_CREATED:'Succesfully Created!',
+    QUOTE_ADDED: 'Succesfully Added!',
     CREATED:'Succesfully Created!',
     DELETED:'Succesfully Deleted!',
     UPDATED:'Succesfully Udated!',
