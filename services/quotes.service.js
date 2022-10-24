@@ -52,7 +52,6 @@ exports.getQuotesByCategoriesId = async(req, res)=>{
 
       const startIndex = (page - 1) * limit
       let documentsCount = await model.modelName.countDocuments().exec()
-      console.log(documentsCount)
       totalPage = Math.ceil(documentsCount/limit)
       const results = {}
       results.pagination ={
