@@ -2,7 +2,8 @@
 const models = require("../models/quotes.model")
 const { AppError,ERROR,ERRORCODE } = require("../utils/appError.utils")
 const MESSAGE = require('../utils/errorMessges.utils')
-
+const FavouriteQuote = require('../models/addToFevQuotes.model')
+// const { findOneAndUpdate } = require("../models/addToFevQuotes.model")
 let quoteCategoryEnumObj = {
 
     1:'lovequotes',
@@ -36,12 +37,11 @@ let quoteCategoryEnumObj = {
 
 
 exports.getQuotesByCategoriesId = async(req, res)=>{
-    console.log(req.query)
+
     const model = models.find(model=> model.collectionName === quoteCategoryEnumObj[req.params.id])
 
     let  page =1
     let  limit=10
-    console.log(req.query.hasOwnProperty('page'))
     if(Object.keys(req.query).length && req.query.hasOwnProperty('page')){
       page = parseInt(req.query.page)
     }
@@ -52,7 +52,6 @@ exports.getQuotesByCategoriesId = async(req, res)=>{
 
       const startIndex = (page - 1) * limit
       let documentsCount = await model.modelName.countDocuments().exec()
-      console.log(documentsCount)
       totalPage = Math.ceil(documentsCount/limit)
       const results = {}
       results.pagination ={
@@ -86,3 +85,65 @@ exports.getQuotesByCategoriesId = async(req, res)=>{
         throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
     }
 }
+
+exports.getQuotesByUser = async (deviceId) => {
+  try{
+    const getQuotes = await FavouriteQuote.find({deviceId:deviceId}).select({
+      "favouriteQuote":1
+    })
+    return getQuotes
+
+  }catch(error){
+    throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
+  }
+}
+
+exports.addQuoteByUser = async (requestBody) => {
+  try{
+    const { deviceId, favouriteQuotes } = requestBody;
+
+    const result = await FavouriteQuote.findOne({deviceId:deviceId})
+      if(result != null){
+        const updateAddToFavourite = await FavouriteQuote.findOneAndUpdate({deviceId:deviceId},{
+          $push:{
+            favouriteQuotes:favouriteQuotes
+          },
+        },{
+          new:true
+        })
+         return updateAddToFavourite
+      }else{
+        const newQuote = new FavouriteQuote(requestBody)
+        const newQuoteAdded = await newQuote.save()
+        return newQuoteAdded;
+      }
+
+  }catch(error){
+    throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
+  }
+}
+
+
+exports.removeQuoteByUser = async (requestBody , next) => {
+  try{
+    const { deviceId } = requestBody.params
+    const { quoteId } = requestBody.body
+
+    const result = await FavouriteQuote.findOne({deviceId:deviceId})
+      if(result.favouriteQuotes.length > 0){
+        const removeAddToFavourite = await FavouriteQuote.findOneAndUpdate({deviceId:deviceId},{
+          $pull:{
+            favouriteQuotes:{ _id : quoteId }
+          },
+        })
+         return removeAddToFavourite
+      }else{
+        return {}
+      }
+      
+  }catch(error){
+    throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
+  }
+}
+
+
