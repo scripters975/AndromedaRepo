@@ -5,7 +5,11 @@ const Schema = mongoos.Schema
 const addToFevQuoteSchemal = new Schema({
     userEmail: {
         type: String,
-        required: [true, 'Email is required']
+        default: null
+    },
+    deviceId: {
+        type: String,
+        required: [true, 'Device id is required']
     },
 
     favouriteQuotes : [
