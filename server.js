@@ -26,11 +26,6 @@ app.use('/Api/QuotesApi',QuotessRouter)
 app.use('/Api/AuthApi',AuthRouters)
 
 
-
-
-
-
-
 app.all('*', (req, res, next) => {
     throw new AppError(`Requested URL ${req.path} not found!`, 404);
   })

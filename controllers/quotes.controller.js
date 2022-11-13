@@ -21,9 +21,9 @@ exports.QuotesController =  {
     },  
 
     getQuotesByUser: async (req, res, next) => {
-        const { email } = req.params
+        const { deviceId } = req.params
         try{
-            const getQuotes = await quotesService.getQuotesByUser(email)
+            const getQuotes = await quotesService.getQuotesByUser(deviceId)
             if(getQuotes.length){
                 res.json({
                     status:200,
@@ -52,7 +52,22 @@ exports.QuotesController =  {
         } catch(error){
             next(error)
         }
-    },  
+    },
     
+    RemoveFavouritQuote: async (req, res, next) => {
+        try{
+            quotesService.removeQuoteByUser(req).then((response)=>{
+                if(Object.keys(response).length){
+                    return appResponse(res, 200, MESSAGE.REMOVE)
+                }else{
+                    return appResponse(res, 401, MESSAGE.NOTEXISTS)
+                }
+            }).catch((error)=>{
+                next(error)
+            })
+        } catch(error){
+            next(error)
+        }
+    }     
 }
 

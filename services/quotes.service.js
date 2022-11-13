@@ -86,9 +86,9 @@ exports.getQuotesByCategoriesId = async(req, res)=>{
     }
 }
 
-exports.getQuotesByUser = async (email) => {
+exports.getQuotesByUser = async (deviceId) => {
   try{
-    const getQuotes = await FavouriteQuote.find({userEmail:email}).select({
+    const getQuotes = await FavouriteQuote.find({deviceId:deviceId}).select({
       "favouriteQuote":1
     })
     return getQuotes
@@ -100,14 +100,13 @@ exports.getQuotesByUser = async (email) => {
 
 exports.addQuoteByUser = async (requestBody) => {
   try{
-    const { userEmail, favouriteQuote } = requestBody;
-    const result = await FavouriteQuote.findOne({userEmail:userEmail})
-    
+    const { deviceId, favouriteQuotes } = requestBody;
+
+    const result = await FavouriteQuote.findOne({deviceId:deviceId})
       if(result != null){
-        const updateAddToFavourite = await FavouriteQuote.findOneAndUpdate({userEmail:userEmail},{
+        const updateAddToFavourite = await FavouriteQuote.findOneAndUpdate({deviceId:deviceId},{
           $push:{
-            favouriteQuote:favouriteQuote
-            
+            favouriteQuotes:favouriteQuotes
           },
         },{
           new:true
@@ -117,8 +116,31 @@ exports.addQuoteByUser = async (requestBody) => {
         const newQuote = new FavouriteQuote(requestBody)
         const newQuoteAdded = await newQuote.save()
         return newQuoteAdded;
-      }    
+      }
 
+  }catch(error){
+    throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
+  }
+}
+
+
+exports.removeQuoteByUser = async (requestBody , next) => {
+  try{
+    const { deviceId } = requestBody.params
+    const { quoteId } = requestBody.body
+
+    const result = await FavouriteQuote.findOne({deviceId:deviceId})
+      if(result.favouriteQuotes.length > 0){
+        const removeAddToFavourite = await FavouriteQuote.findOneAndUpdate({deviceId:deviceId},{
+          $pull:{
+            favouriteQuotes:{ _id : quoteId }
+          },
+        })
+         return removeAddToFavourite
+      }else{
+        return {}
+      }
+      
   }catch(error){
     throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
   }
