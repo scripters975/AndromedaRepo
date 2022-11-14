@@ -86,12 +86,33 @@ exports.getQuotesByCategoriesId = async(req, res)=>{
     }
 }
 
-exports.getQuotesByUser = async (deviceId) => {
+exports.getQuotesByUser = async (req) => {
+  const { deviceId } = req.params
+  let  page =1
+  let  limit=10
+  if(Object.keys(req.query).length && req.query.hasOwnProperty('page')){
+    page = parseInt(req.query.page)
+  }
+  
+  if(Object.keys(req.query).length && req.query.hasOwnProperty('limit')){
+    limit = parseInt(req.query.limit)
+  }
+
+    const startIndex = (page - 1) * limit
+    let documentsCount = await FavouriteQuote.countDocuments().exec()
+    totalPage = Math.ceil(documentsCount/limit)
+    const results = {}
+    results.pagination ={
+    page: page,
+    limit: limit,
+    totalPage:totalPage
+  }
   try{
-    const getQuotes = await FavouriteQuote.find({deviceId:deviceId}).select({
-      "favouriteQuote":1
-    })
-    return getQuotes
+    results.results = await FavouriteQuote.find({deviceId:deviceId}).select({
+      "favouriteQuotes":1,
+      "_id":0
+    }).skip(startIndex).limit(limit).exec()
+    return results
 
   }catch(error){
     throw new AppError(MESSAGE.SERVERSIDERROR,ERROR.InternalServerError,ERRORCODE.InternalServerError)
