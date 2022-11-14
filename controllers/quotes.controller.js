@@ -21,10 +21,11 @@ exports.QuotesController =  {
     },  
 
     getQuotesByUser: async (req, res, next) => {
-        const { deviceId } = req.params
+        
         try{
-            const getQuotes = await quotesService.getQuotesByUser(deviceId)
-            if(getQuotes.length){
+            const getQuotes = await quotesService.getQuotesByUser(req)
+            console.log(getQuotes)
+            if(Object.keys(getQuotes).length){
                 res.json({
                     status:200,
                     message:'Fetch sucessfully!',
