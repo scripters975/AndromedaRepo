@@ -150,11 +150,14 @@ exports.removeQuoteByUser = async (requestBody , next) => {
     const { deviceId } = requestBody.params
     const { quoteId } = requestBody.body
 
-    const result = await FavouriteQuote.findOne({deviceId:deviceId})
+    console.log({deviceId, quoteId})
+
+    const result = await FavouriteQuote.findOne({deviceId:deviceId});
+    console.log("result",result);
       if(result.favouriteQuotes.length > 0){
-        const removeAddToFavourite = await FavouriteQuote.findOneAndUpdate({deviceId:deviceId},{
+        const removeAddToFavourite = await FavouriteQuote.findOneAndDelete({deviceId:deviceId},{
           $pull:{
-            favouriteQuotes:{ _id : quoteId }
+            favouriteQuotes: { _id : quoteId }
           },
         })
          return removeAddToFavourite
